@@ -1,26 +1,16 @@
-import { useState, JSX } from "react";
+import { JSX } from "react";
 import styles from "./index.module.css";
-import { commonExample } from "@/utils/utils.ts";
+import Carousel from "@/components/carousel/Carousel.tsx";
+import styled from "styled-components";
 
+const StyledHeader = styled.h1`
+    margin-bottom: 1em;
+`;
 const HomePage = (): JSX.Element => {
-  const urlWithProxy = `api/v1/version`;
-  const [data, setData] = useState<RespExampleType | null>(null);
-
-  commonExample();
-
-  async function getDataFromServer(): Promise<void> {
-    const res = await fetch(urlWithProxy);
-    const data: RespExampleType = await res.json();
-    setData(data);
-  }
-
   return (
     <div className={styles.app}>
-      <img src="/images/nasa-logo.svg" alt="nasa logo" />
-      <button className={styles.button} onClick={getDataFromServer}>
-        Access server using proxy
-      </button>
-      <p>data : {data?.version}</p>
+      <StyledHeader>Explore World Heritage Sites</StyledHeader>
+        <Carousel />
     </div>
   );
 };
