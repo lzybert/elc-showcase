@@ -1,5 +1,7 @@
 # Demo of a Vite/React/Express application
 
+Live preview at https://elc-showcase-be.onrender.com
+
 ## Screenshots
 
 ![Alt text](https://i.postimg.cc/rwGqfstn/Screenshot-2025-04-25-at-14-33-41.png "Screenshot")
