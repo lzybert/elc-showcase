@@ -13,16 +13,19 @@ describe('useInfiniteSlides', () => {
   });
 
   it('should load the first page of slides', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
-      json: jest.fn().mockResolvedValue({ data: mockSlidesPage }),
-    } as any);
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ data: mockSlidesPage }),
+        status: 200
+      })
+    );
 
     const { result } = renderHook(() => useInfiniteSlides());
 
     expect(result.current.loading).toBe(true);
 
     expect(global.fetch).toHaveBeenCalledWith('api/v1/sites?page=1&limit=10');
-    waitFor(() => {
+    await waitFor(() => {
       expect(result.current.slides).toEqual(mockSlidesPage);
       expect(result.current.loading).toBe(false);
     })
