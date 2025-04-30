@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application } from "express";
 import cors from 'cors';
 import { Request, Response } from 'express';
 import * as fs from 'node:fs';
@@ -38,7 +38,6 @@ const localizeSite = (site: WorldHeritageSite, lang: string) => ({
 });
 
 // Endpoint: All sites (with pagination and region filter)
-// @ts-ignore
 app.get('/api/v1/sites', (req: Request, res: Response) => {
   const lang = (req.query.lang as string || 'en').toLowerCase();
   const page = parseInt(req.query.page as string) || 1;
@@ -57,7 +56,7 @@ app.get('/api/v1/sites', (req: Request, res: Response) => {
   return res.send({ page, limit, total: filtered.length, data: localized });
 });
 
-// @ts-ignore
+// Endpoint: Single site
 app.get('/api/v1/sites/:id', (req: Request, res: Response)=> {
   const lang = (req.query.lang as string || 'en').toLowerCase();
   const id = parseInt(req.params.id);
@@ -74,7 +73,8 @@ app.get('/api/v1/sites/:id', (req: Request, res: Response)=> {
     return res.json(localizeSite(site, lang));
   }
 });
-// @ts-ignore
+
+// Endpoint: Single site - random site promoted that day
 app.get('/api/v1/promo', (req: Request, res: Response)=> {
   const lang = (req.query.lang as string || 'en').toLowerCase();
   const promotedSite = getElementOfTheDay(jsonData);
@@ -86,6 +86,27 @@ app.get('/api/v1/promo', (req: Request, res: Response)=> {
   else {
     return res.json(localizeSite(promotedSite, lang));
   }
+});
+
+// Endpoint: Collection of favorite sites
+app.get('/api/v1/favorites', (req: Request, res: Response) => {
+  const lang = (req.query.lang as string || 'en').toLowerCase();
+  const ids: string[] = (req.query.ids as string).split(',');
+  
+  if (!ids.length) {
+    return res.status(404).json({ message: 'No favorites' });
+  }
+
+  const favoriteItems= [];
+  for (let id of ids) {
+    const numericId = parseInt(id);
+    const site = jsonData.find(s => s.id_no === numericId);
+    if (site) {
+      favoriteItems.push(localizeSite(site, lang));
+    }
+  }
+
+  return res.json(favoriteItems);
 });
 
 app.use(express.static('./.local/vite/dist'));

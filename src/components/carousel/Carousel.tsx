@@ -8,6 +8,7 @@ import {
 } from '@/components/carousel/Carousel.styles.ts';
 import { useInfiniteSlides } from '@/hooks/useInfiniteSlides.ts';
 import CardSite from '@/components/cardSite/CardSite.tsx';
+import { FavoriteSitesProvider } from "@/context/FavoriteSitesContext";
 
 const Carousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,13 +31,15 @@ const Carousel = () => {
   return (
     <CarouselWrapper>
       {loading ? 'Loading' : ''}
-      <SlidesContainer $currentIndex={currentIndex}>
-        {slides.map((slide, index) => (
-          <Slide key={index}>
-            <CardSite {...slide} />
-          </Slide>
-        ))}
-      </SlidesContainer>
+      <FavoriteSitesProvider>
+        <SlidesContainer $currentIndex={currentIndex}>
+          {slides.map((slide, index) => (
+            <Slide key={index}>
+              <CardSite {...slide} />
+            </Slide>
+          ))}
+        </SlidesContainer>
+      </FavoriteSitesProvider>
       {currentIndex > 0 && (
         <ArrowButton $left onClick={prevSlide}>
           <RiArrowLeftCircleLine size='32' />
